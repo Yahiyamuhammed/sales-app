@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop:50,
-    marginTop:500,
+    // marginTop:500,
     // backgroundColor: '#1a1a1a', // Background color
   },
   count: {

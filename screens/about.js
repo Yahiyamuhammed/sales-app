@@ -10,6 +10,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 // import { faCircleCheck ,faRegular } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 
+// import Realm from 'realm';
+import * as SQLite from 'expo-sqlite';
+
+
 // import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 // import { faCircleCheck } from '@fortawesome/pro-thin-svg-icons';
 
@@ -103,13 +107,86 @@ export default function App() {
 }
   };
 
+  // let realm;
+
+  // try {
+  //   realm = new Realm();
+  //   console.log('opened db');
+  // } catch (err) {
+  //   console.log('Error on opening database ' + err);
+  // }
+  
+  // const PersonSchema = {
+  //   name: 'Person',
+  //   properties: {
+  //     firstName: 'string',
+  //     lastName: 'string',
+  //     framework: 'string',
+  //   },
+  // };
 
 
+  
+  const db = SQLite.openDatabase('mydb.db');
+  db.transaction(tx => {
+    tx.executeSql(
+      'CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT, firstName TEXT, lastName TEXT, framework TEXT ,items TEXT);'
+      
+    );
+  });
+  
+  // db.transaction(tx => {
+    
+  //   tx.executeSql('SELECT * FROM Items;', [], (_, { rows: { _array } }) => {
+  //     _array.forEach(item => {
+  //       console.log(`ID: ${item.id}, First Name: ${item.firstName}, Last Name: ${item.lastName}, Framework: ${item.framework}`);
+  //     });
+  //   });
+  //   tx.executeSql('DELETE FROM Items;');
+  //   tx.executeSql('SELECT * FROM Items;', [], (_, { rows: { _array } }) => {
+  //     console.log(_array); // This should log an empty array
+  //   });
+
+  // });
+  
   const handleSubmit = () => {
     // Handle form submission
-    const values = { firstName, lastName, framework };
-    console.log(JSON.stringify(values));
+    // db.transaction(tx => {
+    //   tx.executeSql(
+    //     'ALTER TABLE Items ADD COLUMN items TEXT;'
+    //   );
+    // });
+    
+    const values = [firstName, lastName, framework ,JSON.stringify(selectedList)];
+    // realm.write(() => {
+    //   realm.create('Person', values);
+    // });
+    // console.log(JSON.stringify(values));
+    db.transaction(tx => {
+      // tx.executeSql('DELETE FROM Items;');
+      tx.executeSql(
+        'INSERT INTO Items (firstName, lastName, framework, items) values (?, ?, ?, ?);',
+        [firstName, lastName, framework, JSON.stringify(selectedList)],
+        (_, result) => {
+          console.log('Insertion result:', result); // Log the result of the insertion
+        },
+        (_, error) => {
+          console.log('Insertion error:', error); // Log any errors that occur during insertion
+        }
+      );
+    });
+    console.log('submitteed values', JSON.stringify(values));
     // alert(JSON.stringify(values, undefined, 2));
+    // console.log(JSON.parse(selectedList));
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM Items;', [], (_, { rows: { _array } }) => {
+        _array.forEach(item => {
+        console.log(`ID: ${item.id}, First Name: ${item.firstName}, Last Name: ${item.lastName}, Framework: ${item.framework} ,Items:${item.items}`);
+        });
+      });
+    });
+    
+    
   };
 
   const addSale=()=>
@@ -128,6 +205,8 @@ export default function App() {
    }
  
   }
+
+ 
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={100}>
