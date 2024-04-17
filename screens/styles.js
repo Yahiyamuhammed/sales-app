@@ -99,6 +99,29 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: 'grey', // Customize the text color
   },
+  homeContainer:{
+
+    flex: 1,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // paddingTop:50,
+  },
+  homeCardContainer:{
+    // borderWidth:1,
+    width:'100%',
+  },
+  homecarditem:
+  {
+    // borderWidth:1,
+    margin:4,
+  },
+  cardBox:{
+    margin:10
+  },
+  img:{
+    padding:5,
+    margin:5,
+  },
   errorText: {
     marginTop: 8,
     color: '#ff9900',

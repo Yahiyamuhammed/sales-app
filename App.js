@@ -28,7 +28,7 @@ return (
 </Stack.Navigator> */}
 
 <Tab.Navigator
-      initialRouteName="Add Sale"
+      initialRouteName="home"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -57,7 +57,12 @@ return (
         })}
         
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ headerTitle: "Shops" }} // Change the header title here
+          />
+
         <Tab.Screen name="Add Sale" component={AboutScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
         <Tab.Screen name="test" component={TestScreen} />

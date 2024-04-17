@@ -13,6 +13,9 @@ import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 // import Realm from 'realm';
 import * as SQLite from 'expo-sqlite';
 
+import { insertSampleData } from './dbfakedatas.js';
+
+
 
 // import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 // import { faCircleCheck } from '@fortawesome/pro-thin-svg-icons';
@@ -127,13 +130,23 @@ export default function App() {
 
 
   
-  const db = SQLite.openDatabase('mydb.db');
-  db.transaction(tx => {
-    tx.executeSql(
-      'CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT, firstName TEXT, lastName TEXT, framework TEXT ,items TEXT);'
-      
-    );
-  });
+  let db;
+  if (Platform.OS !== 'web') {
+    db = SQLite.openDatabase('mydb.db');
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT, firstName TEXT, lastName TEXT, place TEXT, framework TEXT ,items TEXT);'
+      );
+    });
+    
+    // db.transaction(tx => {
+    //   tx.executeSql(
+    //     'DROP TABLE IF EXISTS Items;'
+    //   );
+    // });
+
+  }
+  
   
   // db.transaction(tx => {
     
@@ -174,6 +187,8 @@ export default function App() {
           console.log('Insertion error:', error); // Log any errors that occur during insertion
         }
       );
+      tx.executeSql('DELETE FROM Items;');
+x``
     });
     console.log('submitteed values', JSON.stringify(values));
     // alert(JSON.stringify(values, undefined, 2));
@@ -191,6 +206,8 @@ export default function App() {
 
   const addSale=()=>
   {
+    insertSampleData(db);
+
     
    // Create a new array to hold the selected items
    const newItem = [framework, quantity];
