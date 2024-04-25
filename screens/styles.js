@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     marginTop:50,
     // marginTop:500,
     // backgroundColor: '#1a1a1a', // Background color
@@ -23,10 +23,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    padding: 8,
-    height: 40,
+    // padding: 8,
+    // height: 40,
     borderRadius: 4,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: '#ccc',
     marginBottom: 15,
   },
@@ -53,10 +53,10 @@ const styles = StyleSheet.create({
     marginLeft:10,
     flex: 1,
     width:80,
-    padding: 8,
-    height: 40,
+    // padding: 8,
+    // height: 40,
     borderRadius: 4,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: '#ccc',
     marginBottom: 15,
   },
@@ -126,6 +126,59 @@ const styles = StyleSheet.create({
     marginTop: 8,
     color: '#ff9900',
   },
-});
+  select:{
+    borderWidth:1,
+    marginTop:4,
+    marginBottom:4,
+    paddingTop:4,
+    paddingBottom:4,
+    borderRadius:6,
+    borderColor: '#ccc',
+    zIndex:1,
+
+    // color: #252F40,
+          // display: 'inline-block',
+          // fontSize: 12,
+          // fontStyle: 'italic',
+          // marginTop: '1em',
+          
+  },
+  selectItems:{
+   padding:1, 
+   paddingLeft:10,
+   fontSize: 17,
+
+  },
+  testborder:{
+    flexDirection:'row'   
+    // borderWidth:1,
+    // padding:4
+  },
+  fullWidthInput: {
+    flex: 1, // Take up full width
+  },
+  selectInput:{
+    // padding: 8,
+    flex:1,
+    
+    // height: 40,
+    borderRadius: 4,
+    // borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 15,
+    zIndex:1,
+  },
+  clrbutton:{
+    marginRight:0,
+    padding: 8,
+    paddingRight: 0,
+    height: 40,
+    borderRadius: 4,
+    alignItems:'center'
+  },
+  test:{
+    borderWidth:1
+  }
+}); 
 
 export default styles;

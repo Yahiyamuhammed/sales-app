@@ -4,8 +4,14 @@ import React, { useEffect, useState } from 'react';
 import styles from "./styles";
 import { Avatar,Button, Card } from "react-native-paper";
 
+// import DataTable from './datatable.js';
+
+
+
+
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
+
 
 
 
@@ -64,6 +70,8 @@ return (
       {/* <Text style={styles.text}>HomeScreen</Text> */}
       
       <View style={styles.homeCardContainer}>
+      {/* <DataTable />, */}
+
         {data.map(item => (
           console.log(item),
           <View key={item.id} style={styles.homecarditem}>

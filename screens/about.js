@@ -1,5 +1,5 @@
-import React, { useState,useRef } from 'react';
-import { View, Text, TextInput, Button ,Platform ,Pressable,Image ,TouchableOpacity ,Keyboard , KeyboardAvoidingView, ScrollView} from 'react-native';
+import React, { useState,useRef,useEffect  } from 'react';
+import { View, Text, Button ,Platform ,Pressable,Image ,TouchableOpacity ,Keyboard , KeyboardAvoidingView, ScrollView, FlatList} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from './styles'; // Import the styles file
 // import ListIcon from '../icons/tick icon.svg';
@@ -10,10 +10,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 // import { faCircleCheck ,faRegular } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 
+
 // import Realm from 'realm';
 import * as SQLite from 'expo-sqlite';
 
 import { insertSampleData } from './dbfakedatas.js';
+import Creatable from 'react-select/creatable';
+import DropdownContainer from './dropdown.js'; // Assuming dropdown.js is in the same directory
+import Select from 'react-select'
+import { TextInput ,IconButton } from 'react-native-paper';
+
+
+
+
 
 
 
@@ -58,6 +67,7 @@ export default function App() {
   const [quantity, setQuantity] = useState('');
 
   const [selectedOption, setSelectedOption] = useState('Add Sale Item');
+
 
 
 
@@ -161,6 +171,41 @@ export default function App() {
   //   });
 
   // });
+
+
+  const [CreatableOption, setCreatableOption] = useState(null);
+
+  const options = [
+    { value: 'react', label: 'React' },
+    { value: 'vue', label: 'Vue' },
+    { value: 'angular', label: 'Angular' },
+    { value: 'svelte', label: 'Svelte' },
+    { id: 1, label: 'Option 1',value:'sdkfsdn' },
+    { id: 2, label: 'Option 2' },
+    { id: 3, label: 'Option 3' },
+    { id: 4, label: 'Option 4' },
+    { id: 5, label: 'Option 5' },
+  ];
+
+  const handleChange = (option) => {
+    console.log('called hendle change',option,'.label=',option.label);
+    setFramework((prevFramework) => {
+      console.log('Previous framework value:', prevFramework);
+      console.log('New framework value:', option.label);
+      return option.label;
+    });
+  };
+  useEffect(() => {
+    console.log("framework=", framework);
+  }, [framework]);
+  const itemss = [
+    { id: 1, label: 'Item 1' },
+    { id: 2, label: 'Item 2' },
+    { id: 3, label: 'Item 3' },
+  ];
+  const handleSelect = (item) => {
+    console.log('Selected item:', item);
+  };
   
   const handleSubmit = () => {
     // Handle form submission
@@ -206,11 +251,12 @@ x``
 
   const addSale=()=>
   {
-    insertSampleData(db);
+    // insertSampleData(db);
 
     
    // Create a new array to hold the selected items
    const newItem = [framework, quantity];
+   console.log(framework,quantity);
 
    // Check if selectedList already has items
    if (selectedList) {
@@ -222,81 +268,83 @@ x``
    }
  
   }
-
  
 
-  return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={100}>
+    return (
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={100}>
+        <FlatList
+          contentContainerStyle={styles.container}
+          data={[{ key: 'inputs' }, { key: 'button' }]} // Use keys to distinguish between different sections
+          renderItem={({ item }) => (
+            item.key === 'inputs' ? (
+              <View style={styles.inputContainer}> 
+                <TextInput
+                mode="outlined"
+                label="Shop name"
+                  style={styles.input}
+                  // placeholder="Shop name"
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  onSubmitEditing={handleFirstNameSubmit} // Handle the Enter key press
+                  blurOnSubmit={false} // Don't close the keyboard on Enter
+                />
+                <TextInput
 
-<ScrollView>
-    <View style={styles.container}>
-      {/* <Text style={styles.count}>Render 1 times</Text> */}
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="First name"
-          value={firstName}
-          onChangeText={setFirstName}
-          onSubmitEditing={handleFirstNameSubmit} // Handle the Enter key press
-          blurOnSubmit={false} // Don't close the keyboard on Enter
-        />
-        <TextInput
-         ref={lastNameInputRef} // Assign the ref
-          style={styles.input}
-          placeholder="Last name"
-          value={lastName}
-          onChangeText={setLastName}
-        />
-        <View style={{ marginTop: 20 }}>
-              {selectedList && selectedList.map((item, index) => (
-                <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={{ marginRight: 10 }}>Selected List:</Text>
-                  <Text>{item[0]} - {item[1]}</Text>
+                  mode="outlined"
+                  label="Place"
+                  ref={lastNameInputRef} // Assign the ref
+                  style={styles.input}
+                  // placeholder="Place"
+                  value={lastName}
+                  onChangeText={setLastName}
+                />
+                <View style={{ marginTop: 20 }}>
+                  {selectedList && selectedList.map((item, index) => (
+                    <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Text style={{ marginRight: 10 }}>Selected List:</Text>
+                      <Text>{item[0]} - {item[1]}</Text>
+                    </View>
+                  ))}
+                <DropdownContainer handleChange={handleChange} />
                 </View>
-              ))}
-        </View>
-<View style={{ flexDirection: 'row' , width: '100%' }}>
-      {Platform.OS !== 'ios' ? (
-        <Picker
-          style={styles.inputqty}
-          selectedValue={framework}
-          onValueChange={(itemValue) => {
-            setFramework(itemValue);
-          }}
-        >
-          <Picker.Item label="Add Sale Item" value="" />
-          <Picker.Item label="React" value="react" />
-          <Picker.Item label="Vue" value="vue" />
-          <Picker.Item label="Angular" value="angular" />
-          <Picker.Item label="Svelte" value="svelte" />
-        </Picker>
-      ) : (
-        <Pressable style={styles.saleButton} onPress={handleOpenActionSheet}>
-          <Text style={styles.sale}>{selectedOption}</Text>
-        </Pressable>
-      )}
-      <TextInput
-        style={styles.inputitem} 
-        placeholder="Quantity"
-        value={quantity}
-        onChangeText={setQuantity}
-        keyboardType="numeric"
-      />
-      <TouchableOpacity
-        onPress={() => {
-          console.log('icon pressed');
-          Keyboard.dismiss();
-          addSale()
-        }}
-        style={{ ...styles.tickicon, alignItems: 'center', justifyContent: 'center' }}
-      >
-        <FontAwesomeIcon icon={faCheckCircle} size={30}  />
-      </TouchableOpacity>
-    </View>
-  </View>
-      <Button title="Submit" onPress={handleSubmit} style={styles.submitButton}/>
-    </View>
-     </ScrollView>
-     </KeyboardAvoidingView>
-  );
-}
+                <View style={{ flexDirection: 'row', width: '100%' }}>
+                  <TextInput
+                  mode="outlined"
+                  label="Quantity"
+                    style={styles.inputitem}
+                    // placeholder="Quantity"
+                    value={quantity}
+                    onChangeText={setQuantity}
+                    keyboardType="numeric"
+                  />
+                  <TextInput
+                  mode="outlined"
+                  label="no.of pkts"
+                    style={styles.inputitem}
+                    // placeholder="no.of pkts"
+                    value={quantity}
+                    onChangeText={setQuantity}
+                    keyboardType="numeric"
+                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log('icon pressed');
+                      Keyboard.dismiss();
+                      addSale()
+                    }}
+                    style={{ ...styles.tickicon, alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <FontAwesomeIcon icon={faCheckCircle} size={30} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <View>
+                <Button title="Submit" onPress={handleSubmit} style={styles.submitButton} />
+              </View>
+            )
+          )}
+        />
+      </KeyboardAvoidingView>
+    );
+  }
