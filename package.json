@@ -31,6 +31,7 @@
     "react-native-paper": "^5.12.3",
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
+    "react-native-web": "^0.19.11",
     "react-navigation-tabs": "^2.11.2",
     "react-select": "^5.8.0",
     "realm": "^12.6.2"
