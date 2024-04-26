@@ -9,6 +9,8 @@ import {Picker} from '@react-native-picker/picker';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 // import { faCircleCheck ,faRegular } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
+// import DatePickerComponent from '../assets/components/datePicker.js';
+
 
 
 // import Realm from 'realm';
@@ -191,8 +193,8 @@ export default function App() {
     console.log('called hendle change',option,'.label=',option.label);
     setFramework((prevFramework) => {
       console.log('Previous framework value:', prevFramework);
-      console.log('New framework value:', option.label);
-      return option.label;
+      console.log('New framework value:', option);
+      return option;
     });
   };
   useEffect(() => {
@@ -216,6 +218,7 @@ export default function App() {
     // });
     
     const values = [firstName, lastName, framework ,JSON.stringify(selectedList)];
+    console.log('submitting values', JSON.stringify(values));
     // realm.write(() => {
     //   realm.create('Person', values);
     // });
@@ -232,26 +235,35 @@ export default function App() {
           console.log('Insertion error:', error); // Log any errors that occur during insertion
         }
       );
-      tx.executeSql('DELETE FROM Items;');
-x``
+      // tx.executeSql('DELETE FROM Items;');
     });
+
+
+
+    db.transaction(tx => {
+      tx.executeSql(
+          'SELECT * FROM Items;',
+          [],
+          (_, { rows }) => {
+              console.log('Whole database:', rows._array); // Log the whole database
+          },
+          (_, error) => {
+              console.log('Error fetching database:', error); // Log any errors that occur during fetching
+          }
+      );
+  });
+
     console.log('submitteed values', JSON.stringify(values));
     // alert(JSON.stringify(values, undefined, 2));
     // console.log(JSON.parse(selectedList));
-    db.transaction(tx => {
-      tx.executeSql('SELECT * FROM Items;', [], (_, { rows: { _array } }) => {
-        _array.forEach(item => {
-        console.log(`ID: ${item.id}, First Name: ${item.firstName}, Last Name: ${item.lastName}, Framework: ${item.framework} ,Items:${item.items}`);
-        });
-      });
-    });
+   
     
     
   };
 
   const addSale=()=>
   {
-    // insertSampleData(db);
+    insertSampleData(db);
 
     
    // Create a new array to hold the selected items
@@ -305,7 +317,8 @@ x``
                       <Text>{item[0]} - {item[1]}</Text>
                     </View>
                   ))}
-                <DropdownContainer handleChange={handleChange} />
+                <DropdownContainer handleChange={handleChange} setSelected={setFramework} onSelectionChange={handleChange} />
+
                 </View>
                 <View style={{ flexDirection: 'row', width: '100%' }}>
                   <TextInput
@@ -337,6 +350,9 @@ x``
                     <FontAwesomeIcon icon={faCheckCircle} size={30} />
                   </TouchableOpacity>
                 </View>
+                {/* <datePicker /> */}
+                {/* <DatePickerComponent /> */}
+
               </View>
             ) : (
               <View>
