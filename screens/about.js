@@ -9,7 +9,7 @@ import {Picker} from '@react-native-picker/picker';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 // import { faCircleCheck ,faRegular } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
-// import DatePickerComponent from '../assets/components/datePicker.js';
+import DatePickerComponent from '../assets/components/datePicker.js';
 
 
 
@@ -350,8 +350,7 @@ export default function App() {
                     <FontAwesomeIcon icon={faCheckCircle} size={30} />
                   </TouchableOpacity>
                 </View>
-                {/* <datePicker /> */}
-                {/* <DatePickerComponent /> */}
+                <DatePickerComponent />
 
               </View>
             ) : (
