@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 // import { faCircleCheck ,faRegular } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import DatePickerComponent from '../assets/components/datePicker.js';
+import { initDatabase, insertItem ,dropTable} from '../assets/components/database.js'; // Import the database functions
+
 
 
 
@@ -42,14 +44,21 @@ if (Platform.OS === 'ios') {
 // let ActionSheetIOS = Platform.OS === 'ios' ? require('react-native').ActionSheetIOS : undefined;
 
 
+
 export default function App() {
+
+  initDatabase();
+  // dropTable();
   const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [framework, setFramework] = useState('');
+  const [Place, setPlace] = useState('');
+  const [shopName, setshopName] = useState('');
+  const [pkts, setpkts] = useState('');
+  const [balance, setBalance] = useState(null);
+
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items,setItems]=useState([
+  const [Items,setItems]=useState([
             
     {label: "I'm interested in...", value: ''},
     {label: 'React', value: 'react'},
@@ -70,57 +79,59 @@ export default function App() {
 
   const [selectedOption, setSelectedOption] = useState('Add Sale Item');
 
+  const [selectedDate, setSelectedDate] = useState(null);
 
 
 
- const handleOpenActionSheet = () => {
+
+//  const handleOpenActionSheet = () => {
     
-    console.log('ios');
-    const options = ['Cancel', 'Option 1', 'Option 2'];
-  const values = ['', 'hi', 'hello']; // Corresponding values
+//     console.log('ios');
+//     const options = ['Cancel', 'Option 1', 'Option 2'];
+//   const values = ['', 'hi', 'hello']; // Corresponding values
    
-  if (Platform.OS === 'ios') {
- ActionSheetIOS.showActionSheetWithOptions(
+//   if (Platform.OS === 'ios') {
+//  ActionSheetIOS.showActionSheetWithOptions(
       
-      {
-        options:options,
-        // options :[
-        //     {label: "I'm interested in...", value: ''},
-        //     {label: 'React', value: 'react'},
-        //     {label: 'Vue', value: 'vue'},
-        //     {label: 'Angular', value: 'angular'},
-        //     {label: 'Svelte', value: 'svelte'}
-        //   ],
-        cancelButtonIndex: 0,
-        // destructiveButtonIndex: 2,
-        userInterfaceStyle: 'dark',
+//       {
+//         options:options,
+//         // options :[
+//         //     {label: "I'm interested in...", value: ''},
+//         //     {label: 'React', value: 'react'},
+//         //     {label: 'Vue', value: 'vue'},
+//         //     {label: 'Angular', value: 'angular'},
+//         //     {label: 'Svelte', value: 'svelte'}
+//         //   ],
+//         cancelButtonIndex: 0,
+//         // destructiveButtonIndex: 2,
+//         userInterfaceStyle: 'dark',
         
-        title: 'Add an Item',
-      },
-      (buttonIndex) => {
+//         title: 'Add an Item',
+//       },
+//       (buttonIndex) => {
 
-        if (buttonIndex > 0) {
-          const selectedValue = values[buttonIndex];
-          console.log('Selected value:', selectedValue);
-          setFramework(selectedValue);
-          setSelectedOption(options[buttonIndex]);
-          console.log('Selected option:', options[buttonIndex]); // Log the updated value
-          // setSelectedList(options[buttonIndex]);
+//         if (buttonIndex > 0) {
+//           const selectedValue = values[buttonIndex];
+//           console.log('Selected value:', selectedValue);
+//           setshopName(selectedValue);
+//           setSelectedOption(options[buttonIndex]);
+//           console.log('Selected option:', options[buttonIndex]); // Log the updated value
+//           // setSelectedList(options[buttonIndex]);
 
-          // Add the selected option to selectedList
-          // const newItem = [selectedValue, quantity]; // Assuming quantity is already set elsewhere
-          // setSelectedList([...selectedList, newItem]);
-          // addSale()
-        }
-        if (buttonIndex === 1) {
-          // Handle Option 1
-        } else if (buttonIndex === 2) {
-          // Handle Option 2
-        }
-      }
-    );
-}
-  };
+//           // Add the selected option to selectedList
+//           // const newItem = [selectedValue, quantity]; // Assuming quantity is already set elsewhere
+//           // setSelectedList([...selectedList, newItem]);
+//           // addSale()
+//         }
+//         if (buttonIndex === 1) {
+//           // Handle Option 1
+//         } else if (buttonIndex === 2) {
+//           // Handle Option 2
+//         }
+//       }
+//     );
+// }
+//   };
 
   // let realm;
 
@@ -136,7 +147,7 @@ export default function App() {
   //   properties: {
   //     firstName: 'string',
   //     lastName: 'string',
-  //     framework: 'string',
+  //     shopName: 'string',
   //   },
   // };
 
@@ -147,7 +158,7 @@ export default function App() {
     db = SQLite.openDatabase('mydb.db');
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT, firstName TEXT, lastName TEXT, place TEXT, framework TEXT ,items TEXT);'
+        'CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT, ShopName TEXT, Place TEXT, Items TEXT, Quantity TEXT ,pkts TEXT,Date TEXT);'
       );
     });
     
@@ -159,21 +170,6 @@ export default function App() {
 
   }
   
-  
-  // db.transaction(tx => {
-    
-  //   tx.executeSql('SELECT * FROM Items;', [], (_, { rows: { _array } }) => {
-  //     _array.forEach(item => {
-  //       console.log(`ID: ${item.id}, First Name: ${item.firstName}, Last Name: ${item.lastName}, Framework: ${item.framework}`);
-  //     });
-  //   });
-  //   tx.executeSql('DELETE FROM Items;');
-  //   tx.executeSql('SELECT * FROM Items;', [], (_, { rows: { _array } }) => {
-  //     console.log(_array); // This should log an empty array
-  //   });
-
-  // });
-
 
   const [CreatableOption, setCreatableOption] = useState(null);
 
@@ -191,15 +187,20 @@ export default function App() {
 
   const handleChange = (option) => {
     console.log('called hendle change',option,'.label=',option.label);
-    setFramework((prevFramework) => {
-      console.log('Previous framework value:', prevFramework);
-      console.log('New framework value:', option);
+    setItems((prevItems) => {
+      console.log('Previous Items value:', prevItems);
+      console.log('New Items value:', option);
       return option;
     });
   };
   useEffect(() => {
-    console.log("framework=", framework);
-  }, [framework]);
+    console.log("Items=", Items);
+  }, [Items]);
+
+  useEffect(() => {
+    console.log("selected variable date :", selectedDate);
+  }, [selectedDate]); // Log the selectedDate whenever it changes
+
   const itemss = [
     { id: 1, label: 'Item 1' },
     { id: 2, label: 'Item 2' },
@@ -208,67 +209,58 @@ export default function App() {
   const handleSelect = (item) => {
     console.log('Selected item:', item);
   };
+
+  const handleDateSelect = (date) => {
+    setSelectedDate(date); // Update the date variable
+    console.log("selected variable date :",selectedDate);
+  };
   
-  const handleSubmit = () => {
-    // Handle form submission
-    // db.transaction(tx => {
-    //   tx.executeSql(
-    //     'ALTER TABLE Items ADD COLUMN items TEXT;'
-    //   );
-    // });
-    
-    const values = [firstName, lastName, framework ,JSON.stringify(selectedList)];
-    console.log('submitting values', JSON.stringify(values));
-    // realm.write(() => {
-    //   realm.create('Person', values);
-    // });
-    // console.log(JSON.stringify(values));
-    db.transaction(tx => {
-      // tx.executeSql('DELETE FROM Items;');
-      tx.executeSql(
-        'INSERT INTO Items (firstName, lastName, framework, items) values (?, ?, ?, ?);',
-        [firstName, lastName, framework, JSON.stringify(selectedList)],
-        (_, result) => {
-          console.log('Insertion result:', result); // Log the result of the insertion
-        },
-        (_, error) => {
-          console.log('Insertion error:', error); // Log any errors that occur during insertion
-        }
-      );
-      // tx.executeSql('DELETE FROM Items;');
-    });
+  const handleSubmit = async () => {
+    try {
+      await insertItem(shopName, Place, quantity, Items, selectedDate, pkts,balance);
+      // Reset input values after successful insertion
+      setshopName('');
+      setPlace('');
+      setQuantity('');
+      setItems([]);
+      setSelectedDate(null);
+      setpkts('');
+      setBalance('');
+      console.log('Insertion successful');
+    } catch (error) {
+      console.error('Error inserting item:', error);
+    }
+  };
 
+  //   db.transaction(tx => {
+  //     tx.executeSql(
+  //         'SELECT * FROM Items;',
+  //         [],
+  //         (_, { rows }) => {
+  //             // console.log('\n Whole database:', rows._array); // Log the whole database
+  //         },
+  //         (_, error) => {
+  //             console.log('Error fetching database:', error); // Log any errors that occur during fetching
+  //         }
+  //     );
+  // });
 
-
-    db.transaction(tx => {
-      tx.executeSql(
-          'SELECT * FROM Items;',
-          [],
-          (_, { rows }) => {
-              console.log('Whole database:', rows._array); // Log the whole database
-          },
-          (_, error) => {
-              console.log('Error fetching database:', error); // Log any errors that occur during fetching
-          }
-      );
-  });
-
-    console.log('submitteed values', JSON.stringify(values));
-    // alert(JSON.stringify(values, undefined, 2));
-    // console.log(JSON.parse(selectedList));
+  //   console.log('submitteed values', JSON.stringify(values));
+  //   // alert(JSON.stringify(values, undefined, 2));
+  //   // console.log(JSON.parse(selectedList));
    
     
     
-  };
+  // };
 
   const addSale=()=>
   {
-    insertSampleData(db);
+    // insertSampleData(db);
 
     
    // Create a new array to hold the selected items
-   const newItem = [framework, quantity];
-   console.log(framework,quantity);
+   const newItem = [Items, quantity];
+   console.log(Items,quantity);
 
    // Check if selectedList already has items
    if (selectedList) {
@@ -295,8 +287,8 @@ export default function App() {
                 label="Shop name"
                   style={styles.input}
                   // placeholder="Shop name"
-                  value={firstName}
-                  onChangeText={setFirstName}
+                  value={shopName}
+                  onChangeText={setshopName}
                   onSubmitEditing={handleFirstNameSubmit} // Handle the Enter key press
                   blurOnSubmit={false} // Don't close the keyboard on Enter
                 />
@@ -307,8 +299,8 @@ export default function App() {
                   ref={lastNameInputRef} // Assign the ref
                   style={styles.input}
                   // placeholder="Place"
-                  value={lastName}
-                  onChangeText={setLastName}
+                  value={Place}
+                  onChangeText={setPlace}
                 />
                 <View style={{ marginTop: 20 }}>
                   {selectedList && selectedList.map((item, index) => (
@@ -317,7 +309,7 @@ export default function App() {
                       <Text>{item[0]} - {item[1]}</Text>
                     </View>
                   ))}
-                <DropdownContainer handleChange={handleChange} setSelected={setFramework} onSelectionChange={handleChange} />
+                <DropdownContainer handleChange={handleChange} setSelected={setItems} onSelectionChange={handleChange} />
 
                 </View>
                 <View style={{ flexDirection: 'row', width: '100%' }}>
@@ -335,8 +327,8 @@ export default function App() {
                   label="no.of pkts"
                     style={styles.inputitem}
                     // placeholder="no.of pkts"
-                    value={quantity}
-                    onChangeText={setQuantity}
+                    value={pkts}
+                    onChangeText={setpkts}
                     keyboardType="numeric"
                   />
                   <TouchableOpacity
@@ -350,7 +342,16 @@ export default function App() {
                     <FontAwesomeIcon icon={faCheckCircle} size={30} />
                   </TouchableOpacity>
                 </View>
-                <DatePickerComponent />
+                <TextInput
+                  mode="outlined"
+                  label="Balance"
+                    // style={styles.inputitem}
+                    // placeholder="no.of pkts"
+                    value={balance}
+                    onChangeText={setBalance}
+                    keyboardType="numeric"
+                  />
+                <DatePickerComponent onDateSelect={handleDateSelect} />
 
               </View>
             ) : (

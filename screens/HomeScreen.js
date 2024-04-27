@@ -73,7 +73,7 @@ return (
       {/* <DataTable />, */}
 
         {data.map(item => (
-          console.log(item),
+          console.log("items :   ",item),
           <View key={item.id} style={styles.homecarditem}>
             {/* <Text>First Name: {item.firstName}</Text>
             <Text>Last Name: {item.lastName}</Text>
@@ -81,13 +81,13 @@ return (
             <Text>Items: {JSON.parse(item.items)}</Text> */}
             <Card style={styles.cardBox} mode="contained">
         <Card.Title
-          title={item.firstName}
-          subtitle={item.place} 
+          title={item.ShopName}
+          subtitle={item.Place} 
           left={LeftContent}
         />
         <Card.Content>
-          <Text variant="titleLarge">{item.framework}</Text>
-          <Text variant="bodyMedium">{item.lastName}</Text>
+          <Text variant="titleLarge">Balance : {item.Balance}</Text>
+          <Text variant="bodyMedium">Latest Sale : {item.Date}</Text>
         </Card.Content>
         <Card.Cover source={{ uri: "https://picsum.photos/700" }} style={styles.img} />
         <Card.Actions>
