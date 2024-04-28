@@ -28,7 +28,7 @@ return (
 </Stack.Navigator> */}
 
 <Tab.Navigator
-      initialRouteName="Add Sale"
+      initialRouteName="home"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;

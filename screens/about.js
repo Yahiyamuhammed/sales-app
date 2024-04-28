@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import DatePickerComponent from '../assets/components/datePicker.js';
 import { initDatabase, insertItem ,dropTable} from '../assets/components/database.js'; // Import the database functions
+import Location from '../assets/components/location.js';
 
 
 
@@ -352,6 +353,7 @@ export default function App() {
                     keyboardType="numeric"
                   />
                 <DatePickerComponent onDateSelect={handleDateSelect} />
+                <Location />
 
               </View>
             ) : (

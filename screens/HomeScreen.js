@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import styles from "./styles";
 import { Avatar,Button, Card } from "react-native-paper";
 
+import Locations from '../assets/components/location.js';
+
+
 // import DataTable from './datatable.js';
 
 
@@ -68,6 +71,9 @@ return (
       }
     >
       {/* <Text style={styles.text}>HomeScreen</Text> */}
+
+      <Locations />
+
       
       <View style={styles.homeCardContainer}>
       {/* <DataTable />, */}

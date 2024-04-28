@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   inputContainer: {
+    flex:1,
     width: 300,
     marginBottom: 20,
   },
@@ -100,9 +101,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: 'grey', // Customize the text color
   },
+  scrollView:{
+    flex:1
+  },
   homeContainer:{
 
     flex: 1,
+    
     // alignItems: 'center',
     // justifyContent: 'center',
     // paddingTop:50,
