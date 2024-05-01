@@ -19,7 +19,7 @@ export default function App() {
     
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
-      <Locations />
+      {/* <Locations /> */}
       <StatusBar style="auto" />
     </View>
   );
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     // height:'100%',
     // width:'100%',
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#bae2da',
     alignItems: 'center',
     justifyContent: 'center',
   },

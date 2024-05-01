@@ -1,9 +1,11 @@
 import React ,{useState} from 'react';
 import MapView,{PROVIDER_GOOGLE} from 'react-native-maps';
-import { StyleSheet, View ,Button,Linking,Platform,Alert} from 'react-native';
+import { StyleSheet, View ,Linking,Platform,Alert} from 'react-native';
+import { Button } from "react-native-paper";
+
 import { layer } from '@fortawesome/fontawesome-svg-core';
 
-export default function App() {
+export default function App({onlocationChange}) {
 
     const [userLocation, setUserLocation] = useState(1);
     const [userLocationAllData, setUserLocationAllData] = useState(1);
@@ -18,7 +20,8 @@ export default function App() {
     setUserLocationAllData(coordinate);
     setUserLocation({ latitude, longitude });
 
-    console.log("location updated",userLocation);
+    // console.log("location updated",userLocation);
+    onlocationChange(userLocation);
     // Here you can update any other variables based on the user's location
   };
 
@@ -75,31 +78,39 @@ export default function App() {
         // longitudeDelta: 0.0421,
         // You can optionally include other properties like latitudeDelta and longitudeDelta here
       } : undefined} 
+
+      
     // )}
 
 
       onUserLocationChange={handleUserLocationChange}
+      userLocationUpdateInterval={10000}
+      maxZoomLevel={17}
 
     //   camera={1};
-        mapType='STARNDARD'
+        mapType='SATELITE'
         // userInterfaceStyle='dark' //ios only
         // showsBuildings='true'
       />
-            <Button title="Navigate" onPress={handleNavigate} />
+            <Button  onPress={handleNavigate} mode="contained" style={styles.btnav}>dsa</Button>
 
     </View>
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    height:100,
+    borderWidth:1,
+    marginBottom:50,
   },
   map: {
     width: '100%',
     height: '100%',
-    borderWidth:1,
+  },
+  btnav:{
+    margin:20,
   },
 });

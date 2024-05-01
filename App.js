@@ -30,6 +30,11 @@ return (
 <Tab.Navigator
       initialRouteName="home"
         screenOptions={({ route }) => ({
+
+          headerStyle: {
+            backgroundColor: "#bae2da", // Change the background color of the header here
+          },
+          headerTintColor: "#fff", // Change the text color of the header here
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
@@ -50,7 +55,8 @@ return (
             inactiveTintColor: "gray",
             tabBarStyle: [
             {
-              display: "flex"
+              display: "flex",
+              backgroundColor: '#bae2da',
             },
             null
           ]
@@ -60,7 +66,12 @@ return (
         <Tab.Screen
             name="Home"
             component={HomeScreen}
-            options={{ headerTitle: "Shops" }} // Change the header title here
+            options={{ headerTitle: "Shops" ,
+            headerStyle: {
+              backgroundColor: "#bae2da", // Change the background color of the header here
+            },
+            headerTintColor: "#fff", // Change the text color of the header here
+          }} // Change the header title here
           />
 
         <Tab.Screen name="Add Sale" component={AboutScreen} />

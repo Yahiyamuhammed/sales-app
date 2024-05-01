@@ -1,5 +1,7 @@
 import React, { useState,useRef,useEffect  } from 'react';
-import { View, Text, Button ,Platform ,Pressable,Image ,TouchableOpacity ,Keyboard , KeyboardAvoidingView, ScrollView, FlatList} from 'react-native';
+import { View, Text ,Platform ,Pressable,Image ,TouchableOpacity ,Keyboard , KeyboardAvoidingView, ScrollView, FlatList} from 'react-native';
+import { Button } from "react-native-paper";
+
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from './styles'; // Import the styles file
 // import ListIcon from '../icons/tick icon.svg';
@@ -55,6 +57,7 @@ export default function App() {
   const [shopName, setshopName] = useState('');
   const [pkts, setpkts] = useState('');
   const [balance, setBalance] = useState(null);
+  const [location,setLocation]=useState('');
 
 
   const [open, setOpen] = useState(false);
@@ -80,80 +83,18 @@ export default function App() {
 
   const [selectedOption, setSelectedOption] = useState('Add Sale Item');
 
-  const [selectedDate, setSelectedDate] = useState(null);
-
-
-
-
-//  const handleOpenActionSheet = () => {
-    
-//     console.log('ios');
-//     const options = ['Cancel', 'Option 1', 'Option 2'];
-//   const values = ['', 'hi', 'hello']; // Corresponding values
-   
-//   if (Platform.OS === 'ios') {
-//  ActionSheetIOS.showActionSheetWithOptions(
-      
-//       {
-//         options:options,
-//         // options :[
-//         //     {label: "I'm interested in...", value: ''},
-//         //     {label: 'React', value: 'react'},
-//         //     {label: 'Vue', value: 'vue'},
-//         //     {label: 'Angular', value: 'angular'},
-//         //     {label: 'Svelte', value: 'svelte'}
-//         //   ],
-//         cancelButtonIndex: 0,
-//         // destructiveButtonIndex: 2,
-//         userInterfaceStyle: 'dark',
-        
-//         title: 'Add an Item',
-//       },
-//       (buttonIndex) => {
-
-//         if (buttonIndex > 0) {
-//           const selectedValue = values[buttonIndex];
-//           console.log('Selected value:', selectedValue);
-//           setshopName(selectedValue);
-//           setSelectedOption(options[buttonIndex]);
-//           console.log('Selected option:', options[buttonIndex]); // Log the updated value
-//           // setSelectedList(options[buttonIndex]);
-
-//           // Add the selected option to selectedList
-//           // const newItem = [selectedValue, quantity]; // Assuming quantity is already set elsewhere
-//           // setSelectedList([...selectedList, newItem]);
-//           // addSale()
-//         }
-//         if (buttonIndex === 1) {
-//           // Handle Option 1
-//         } else if (buttonIndex === 2) {
-//           // Handle Option 2
-//         }
-//       }
-//     );
-// }
-//   };
-
-  // let realm;
-
-  // try {
-  //   realm = new Realm();
-  //   console.log('opened db');
-  // } catch (err) {
-  //   console.log('Error on opening database ' + err);
-  // }
+  const formatDate = (date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // Month is zero-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
   
-  // const PersonSchema = {
-  //   name: 'Person',
-  //   properties: {
-  //     firstName: 'string',
-  //     lastName: 'string',
-  //     shopName: 'string',
-  //   },
-  // };
-
-
+  const currentDate = formatDate(new Date());
   
+  const [selectedDate, setSelectedDate] = useState(currentDate);
+
+
   let db;
   if (Platform.OS !== 'web') {
     db = SQLite.openDatabase('mydb.db');
@@ -217,8 +158,9 @@ export default function App() {
   };
   
   const handleSubmit = async () => {
+    
     try {
-      await insertItem(shopName, Place, quantity, Items, selectedDate, pkts,balance);
+      await insertItem(shopName, Place, quantity, Items, selectedDate, pkts,balance,location);
       // Reset input values after successful insertion
       setshopName('');
       setPlace('');
@@ -227,24 +169,25 @@ export default function App() {
       setSelectedDate(null);
       setpkts('');
       setBalance('');
+      setLocation('');
       console.log('Insertion successful');
     } catch (error) {
       console.error('Error inserting item:', error);
     }
   };
 
-  //   db.transaction(tx => {
-  //     tx.executeSql(
-  //         'SELECT * FROM Items;',
-  //         [],
-  //         (_, { rows }) => {
-  //             // console.log('\n Whole database:', rows._array); // Log the whole database
-  //         },
-  //         (_, error) => {
-  //             console.log('Error fetching database:', error); // Log any errors that occur during fetching
-  //         }
-  //     );
-  // });
+    db.transaction(tx => {
+      tx.executeSql(
+          'SELECT * FROM Items;',
+          [],
+          (_, { rows }) => {
+              // console.log('\n Whole database:', rows._array); // Log the whole database
+          },
+          (_, error) => {
+              console.log('Error fetching database:', error); // Log any errors that occur during fetching
+          }
+      );
+  });
 
   //   console.log('submitteed values', JSON.stringify(values));
   //   // alert(JSON.stringify(values, undefined, 2));
@@ -257,7 +200,7 @@ export default function App() {
   const addSale=()=>
   {
     // insertSampleData(db);
-
+   
     
    // Create a new array to hold the selected items
    const newItem = [Items, quantity];
@@ -272,97 +215,110 @@ export default function App() {
      setSelectedList([newItem]);
    }
  
+
+  }
+
+  const getLocation=(userLocation)=>
+  {
+    setLocation(userLocation);
+    // console.log("location fn called",location);
   }
  
 
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={100}>
-        <FlatList
-          contentContainerStyle={styles.container}
-          data={[{ key: 'inputs' }, { key: 'button' }]} // Use keys to distinguish between different sections
-          renderItem={({ item }) => (
-            item.key === 'inputs' ? (
-              <View style={styles.inputContainer}> 
-                <TextInput
-                mode="outlined"
-                label="Shop name"
-                  style={styles.input}
-                  // placeholder="Shop name"
-                  value={shopName}
-                  onChangeText={setshopName}
-                  onSubmitEditing={handleFirstNameSubmit} // Handle the Enter key press
-                  blurOnSubmit={false} // Don't close the keyboard on Enter
-                />
-                <TextInput
+      <View style={styles.container}>
+      
+  <ScrollView>
+    
+    <View style={styles.inputContainer}> 
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={100}>
 
-                  mode="outlined"
-                  label="Place"
-                  ref={lastNameInputRef} // Assign the ref
-                  style={styles.input}
-                  // placeholder="Place"
-                  value={Place}
-                  onChangeText={setPlace}
-                />
-                <View style={{ marginTop: 20 }}>
-                  {selectedList && selectedList.map((item, index) => (
-                    <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Text style={{ marginRight: 10 }}>Selected List:</Text>
-                      <Text>{item[0]} - {item[1]}</Text>
-                    </View>
-                  ))}
-                <DropdownContainer handleChange={handleChange} setSelected={setItems} onSelectionChange={handleChange} />
-
-                </View>
-                <View style={{ flexDirection: 'row', width: '100%' }}>
-                  <TextInput
-                  mode="outlined"
-                  label="Quantity"
-                    style={styles.inputitem}
-                    // placeholder="Quantity"
-                    value={quantity}
-                    onChangeText={setQuantity}
-                    keyboardType="numeric"
-                  />
-                  <TextInput
-                  mode="outlined"
-                  label="no.of pkts"
-                    style={styles.inputitem}
-                    // placeholder="no.of pkts"
-                    value={pkts}
-                    onChangeText={setpkts}
-                    keyboardType="numeric"
-                  />
-                  <TouchableOpacity
-                    onPress={() => {
-                      console.log('icon pressed');
-                      Keyboard.dismiss();
-                      addSale()
-                    }}
-                    style={{ ...styles.tickicon, alignItems: 'center', justifyContent: 'center' }}
-                  >
-                    <FontAwesomeIcon icon={faCheckCircle} size={30} />
-                  </TouchableOpacity>
-                </View>
-                <TextInput
-                  mode="outlined"
-                  label="Balance"
-                    // style={styles.inputitem}
-                    // placeholder="no.of pkts"
-                    value={balance}
-                    onChangeText={setBalance}
-                    keyboardType="numeric"
-                  />
-                <DatePickerComponent onDateSelect={handleDateSelect} />
-                <Location />
-
-              </View>
-            ) : (
-              <View>
-                <Button title="Submit" onPress={handleSubmit} style={styles.submitButton} />
-              </View>
-            )
-          )}
+      
+      <TextInput
+        mode="outlined"
+        label="Shop name"
+        style={styles.input}
+        // placeholder="Shop name"
+        value={shopName}
+        onChangeText={setshopName}
+        onSubmitEditing={handleFirstNameSubmit} // Handle the Enter key press
+        blurOnSubmit={false} // Don't close the keyboard on Enter
+      />
+      <TextInput
+        mode="outlined"
+        label="Place"
+        ref={lastNameInputRef} // Assign the ref
+        style={styles.input}
+        // placeholder="Place"
+        value={Place}
+        onChangeText={setPlace}
+      />
+      <View style={{ marginTop: 20 }}>
+        {selectedList && selectedList.map((item, index) => (
+          <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ marginRight: 10 }}>Selected List:</Text>
+            <Text>{item[0]} - {item[1]}</Text>
+          </View>
+        ))}
+        <DropdownContainer handleChange={handleChange} setSelected={setItems} onSelectionChange={handleChange} />
+      </View>
+      <View style={{ flexDirection: 'row', width: '100%' }}>
+        <TextInput
+          mode="outlined"
+          label="Quantity"
+          style={styles.inputitem}
+          // placeholder="Quantity"
+          value={quantity}
+          onChangeText={setQuantity}
+          keyboardType="numeric"
         />
-      </KeyboardAvoidingView>
+       
+        <TextInput
+          mode="outlined"
+          label="no.of pkts"
+          style={styles.inputitem}
+          // placeholder="no.of pkts"
+          value={pkts}
+          onChangeText={setpkts}
+          keyboardType="numeric"
+        />
+        <TouchableOpacity
+          onPress={() => {
+            console.log('icon pressed');
+            Keyboard.dismiss();
+            addSale()
+          }}
+          style={{ ...styles.tickicon, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <FontAwesomeIcon icon={faCheckCircle} size={30} />
+        </TouchableOpacity>
+      </View>
+      <TextInput
+        mode="outlined"
+        label="Balance"
+        // style={styles.inputitem}
+        // placeholder="no.of pkts"
+        value={balance}
+        onChangeText={setBalance}
+        keyboardType="numeric"
+      />
+            </KeyboardAvoidingView>
+            <View style={margin='0'}>
+
+      <DatePickerComponent onDateSelect={handleDateSelect} />
+      <Location onlocationChange={getLocation}/>
+      </View>
+
+    </View>
+    
+   
+    <View >
+    <Button title="Submit" mode="contained"onPress={handleSubmit} >Submit</Button>
+   </View>
+  </ScrollView>
+
+  </View>
+  
+
     );
   }

@@ -72,7 +72,7 @@ return (
     >
       {/* <Text style={styles.text}>HomeScreen</Text> */}
 
-      <Locations />
+      {/* <Locations /> */}
 
       
       <View style={styles.homeCardContainer}>
