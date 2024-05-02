@@ -206,12 +206,15 @@ export default function App() {
  
 
     return (
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}     style={{flex: 1}}>
+
       <View style={styles.container}>
+
       
-  <ScrollView>
+  <ScrollView contentContainerStyle={{flexGrow: 1}}>
     
     <View style={styles.inputContainer}> 
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={100}>
+
       <View style={{paddingTop:10,marginTop:10}}>
       <View style={styles.shopdheading}>
       <Text style={styles.shopdheadingtext}>Shop Details</Text>
@@ -240,8 +243,9 @@ export default function App() {
 
       <View style={{paddingTop:10,marginTop:10}}>
       <View style={styles.shopdheading}>
-        
       <Text style={styles.shopdheadingtext}>Sales Details</Text>
+
+
       <View style={{ marginTop: 0 }}>
 
 
@@ -299,6 +303,11 @@ export default function App() {
       </View>
       </View></View>
 
+      <View style={{paddingTop:10,marginTop:10}}>
+      <View style={styles.shopdheading}>
+      <Text style={{...styles.shopdheadingtext,width:150}}>Transaction Details</Text>
+      
+
       <TextInput
         mode="outlined"
         label="Balance"
@@ -308,7 +317,18 @@ export default function App() {
         onChangeText={setBalance}
         keyboardType="numeric"
       />
-            </KeyboardAvoidingView>
+      <TextInput
+        mode="outlined"
+        label="Margin %"
+        // style={styles.inputitem}
+        // placeholder="no.of pkts"
+        value={balance}
+        onChangeText={setBalance}
+        keyboardType="numeric"
+      />
+
+</View></View>
+
             <View style={margin='0'}>
 
       <DatePickerComponent onDateSelect={handleDateSelect} />
@@ -324,7 +344,8 @@ export default function App() {
   </ScrollView>
 
   </View>
-  
+    </KeyboardAvoidingView>
+
 
     );
   }
