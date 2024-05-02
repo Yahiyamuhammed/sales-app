@@ -10,7 +10,7 @@ export const initDatabase = () => {
     db = SQLite.openDatabase('mydb.db');
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT, ShopName TEXT, Place TEXT, Items TEXT, Quantity TEXT, pkts TEXT, Date TEXT , Balance TEXT);'
+        'CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT, ShopName TEXT, Place TEXT, Items TEXT, Quantity TEXT, pkts TEXT, Date TEXT , Balance TEXT,Location TEXT);'
       );
     });
   }
@@ -28,12 +28,12 @@ export const dropTable =()=>
     }
 }
 
-export const insertItem = (shopName, place, quantity, items, date, pkts,Balance) => {
+export const insertItem = (shopName, place, quantity, items, date, pkts,Balance,location) => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO Items (shopName, Place, Quantity, Items, Date, pkts,Balance) VALUES (?, ?, ?, ?, ?, ?, ?);',
-        [shopName, place, quantity, JSON.stringify(items), date, pkts,Balance],
+        'INSERT INTO Items (shopName, Place, Quantity, Items, Date, pkts,Balance,Location) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
+        [shopName, place, quantity, JSON.stringify(items), date, pkts,Balance,location],
         (_, result) => {
           resolve(result); // Resolve with the result of the insertion
         },

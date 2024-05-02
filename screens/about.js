@@ -57,19 +57,13 @@ export default function App() {
   const [shopName, setshopName] = useState('');
   const [pkts, setpkts] = useState('');
   const [balance, setBalance] = useState(null);
-  const [location,setLocation]=useState('');
+  const [location,setLocation]=useState('[]');
 
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [Items,setItems]=useState([
-            
-    {label: "I'm interested in...", value: ''},
-    {label: 'React', value: 'react'},
-    {label: 'Vue', value: 'vue'},
-    {label: 'Angular', value: 'angular'},
-    {label: 'Svelte', value: 'svelte'},
-  ]);
+  const [Items,setItems]=useState(null);
+  const [Item,setItem]=useState([]);
   
   const lastNameInputRef = useRef(); // Create a ref for the last name input
 
@@ -79,7 +73,7 @@ export default function App() {
 
   const [selectedLanguage, setSelectedLanguage] = useState();
   const [selectedList, setSelectedList] = useState(null);
-  const [quantity, setQuantity] = useState('');
+  const [wheight, setWheight] = useState('');
 
   const [selectedOption, setSelectedOption] = useState('Add Sale Item');
 
@@ -115,26 +109,8 @@ export default function App() {
 
   const [CreatableOption, setCreatableOption] = useState(null);
 
-  const options = [
-    { value: 'react', label: 'React' },
-    { value: 'vue', label: 'Vue' },
-    { value: 'angular', label: 'Angular' },
-    { value: 'svelte', label: 'Svelte' },
-    { id: 1, label: 'Option 1',value:'sdkfsdn' },
-    { id: 2, label: 'Option 2' },
-    { id: 3, label: 'Option 3' },
-    { id: 4, label: 'Option 4' },
-    { id: 5, label: 'Option 5' },
-  ];
+  
 
-  const handleChange = (option) => {
-    console.log('called hendle change',option,'.label=',option.label);
-    setItems((prevItems) => {
-      console.log('Previous Items value:', prevItems);
-      console.log('New Items value:', option);
-      return option;
-    });
-  };
   useEffect(() => {
     console.log("Items=", Items);
   }, [Items]);
@@ -161,6 +137,7 @@ export default function App() {
     
     try {
       await insertItem(shopName, Place, quantity, Items, selectedDate, pkts,balance,location);
+      // console.log("db loc",location);
       // Reset input values after successful insertion
       setshopName('');
       setPlace('');
@@ -203,8 +180,8 @@ export default function App() {
    
     
    // Create a new array to hold the selected items
-   const newItem = [Items, quantity];
-   console.log(Items,quantity);
+   const newItem = [Items,wheight,pkts];
+   console.log(Items,wheight,pkts);
 
    // Check if selectedList already has items
    if (selectedList) {
@@ -220,8 +197,11 @@ export default function App() {
 
   const getLocation=(userLocation)=>
   {
-    setLocation(userLocation);
-    // console.log("location fn called",location);
+    setLocation({
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude
+    });
+        // console.log("location fn called",location);
   }
  
 
@@ -232,8 +212,9 @@ export default function App() {
     
     <View style={styles.inputContainer}> 
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={100}>
-
-      
+      <View style={{paddingTop:10,marginTop:10}}>
+      <View style={styles.shopdheading}>
+      <Text style={styles.shopdheadingtext}>Shop Details</Text>
       <TextInput
         mode="outlined"
         label="Shop name"
@@ -253,29 +234,52 @@ export default function App() {
         value={Place}
         onChangeText={setPlace}
       />
-      <View style={{ marginTop: 20 }}>
+      </View></View>
+
+
+
+      <View style={{paddingTop:10,marginTop:10}}>
+      <View style={styles.shopdheading}>
+        
+      <Text style={styles.shopdheadingtext}>Sales Details</Text>
+      <View style={{ marginTop: 0 }}>
+
+
         {selectedList && selectedList.map((item, index) => (
-          <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ marginRight: 10 }}>Selected List:</Text>
-            <Text>{item[0]} - {item[1]}</Text>
-          </View>
+          
+          <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', ...styles.selecteditems }}>
+  <Text style={{ flexBasis: 100, marginRight: 10, fontSize: 15 }}>{item[0]}</Text>
+  <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+    <Text style={{ flexBasis: 60, marginRight: 10, fontSize: 15 }}>{item[1]}(g)</Text>
+    <Text style={{ flexBasis: 80, marginRight: 10, fontSize: 15 }}>qty:{item[2]}</Text>
+  </View>
+</View>
+
         ))}
-        <DropdownContainer handleChange={handleChange} setSelected={setItems} onSelectionChange={handleChange} />
-      </View>
-      <View style={{ flexDirection: 'row', width: '100%' }}>
         <TextInput
           mode="outlined"
-          label="Quantity"
+          label="Items Sold"
+          // style={styles.inputitem}
+          // placeholder="Quantity"
+          value={Items}
+          onChangeText={setItems}
+          // keyboardType="numeric"
+        />
+      </View>
+      <View style={{ flexDirection: 'row', width: '100%' ,alignItems:'center',paddingTop:10 ,paddingRight:10}}>
+        <TextInput
+          mode="outlined"
+          label="Weight (g)"
           style={styles.inputitem}
           // placeholder="Quantity"
-          value={quantity}
-          onChangeText={setQuantity}
+          value={wheight}
+          onChangeText={setWheight}
           keyboardType="numeric"
         />
        
         <TextInput
           mode="outlined"
-          label="no.of pkts"
+          label="Packets"
           style={styles.inputitem}
           // placeholder="no.of pkts"
           value={pkts}
@@ -293,6 +297,8 @@ export default function App() {
           <FontAwesomeIcon icon={faCheckCircle} size={30} />
         </TouchableOpacity>
       </View>
+      </View></View>
+
       <TextInput
         mode="outlined"
         label="Balance"

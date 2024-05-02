@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import styles from "./styles";
 import { Avatar,Button, Card } from "react-native-paper";
 
-import Locations from '../assets/components/location.js';
+import {handleNavigate} from '../assets/components/location.js';
 
 
 // import DataTable from './datatable.js';
@@ -62,7 +62,7 @@ return (
 
     <View style={styles.homeContainer}>
     <ScrollView
-      contentContainerStyle={styles.scrollView}
+      
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -80,6 +80,8 @@ return (
 
         {data.map(item => (
           console.log("items :   ",item),
+          
+          console.log("longitude",item.Location.longitude),
           <View key={item.id} style={styles.homecarditem}>
             {/* <Text>First Name: {item.firstName}</Text>
             <Text>Last Name: {item.lastName}</Text>
@@ -97,7 +99,8 @@ return (
         </Card.Content>
         <Card.Cover source={{ uri: "https://picsum.photos/700" }} style={styles.img} />
         <Card.Actions>
-          <Button>Navigate</Button>
+        <Button onPress={() => handleNavigate(item.Location)}>Navigate</Button>
+
           <Button>Add sale</Button>
           
 

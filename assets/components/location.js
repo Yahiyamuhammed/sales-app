@@ -5,6 +5,63 @@ import { Button } from "react-native-paper";
 
 import { layer } from '@fortawesome/fontawesome-svg-core';
 
+export  const handleNavigate = (userLocation) => {
+  if (userLocation) {
+    console.log("user location",userLocation);
+
+    let latitude, longitude;
+    
+    // const { latitude, longitude } = userLocation;
+   // Parse the string into a JavaScript object
+const match = userLocation.match(/latitude = "(.*?)";\n.*?longitude = "(.*?)";/);
+
+if (match) {
+    const latitudeString = match[1];
+    const longitudeString = match[2];
+
+    // Parse latitude and longitude strings to numbers
+     latitude = parseFloat(latitudeString);
+     longitude = parseFloat(longitudeString);
+
+    console.log("Latitude: ", latitude);
+    console.log("Longitude: ", longitude);
+} else {
+    console.error("Unable to parse user location.");
+}
+    const url = Platform.select({
+      ios: `maps://app?saddr=&daddr=${latitude},${longitude}`,
+      android: `google.navigation:q=${latitude},${longitude}`,
+    });
+
+    // Prompt the user to choose between Google Maps and Apple Maps
+    if (Platform.OS === 'ios') {
+      Alert.alert(
+        'Open in Maps',
+        'Which app would you like to use for navigation?',
+        [
+          {
+            text: 'Google Maps',
+            onPress: () => Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`),
+          },
+          {
+            text: 'Apple Maps',
+            onPress: () => Linking.openURL(`http://maps.apple.com/?daddr=${latitude},${longitude}`),
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+        ],
+        { cancelable: true }
+      );
+    } else {
+      Linking.openURL(url);
+    }
+  } else {
+    console.warn('User location not available.');
+  }
+};
+
 export default function App({onlocationChange}) {
 
     const [userLocation, setUserLocation] = useState(1);
@@ -25,42 +82,7 @@ export default function App({onlocationChange}) {
     // Here you can update any other variables based on the user's location
   };
 
-  const handleNavigate = () => {
-    if (userLocation) {
-      const { latitude, longitude } = userLocation;
-      const url = Platform.select({
-        ios: `maps://app?saddr=&daddr=${latitude},${longitude}`,
-        android: `google.navigation:q=${latitude},${longitude}`,
-      });
-
-      // Prompt the user to choose between Google Maps and Apple Maps
-      if (Platform.OS === 'ios') {
-        Alert.alert(
-          'Open in Maps',
-          'Which app would you like to use for navigation?',
-          [
-            {
-              text: 'Google Maps',
-              onPress: () => Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`),
-            },
-            {
-              text: 'Apple Maps',
-              onPress: () => Linking.openURL(`http://maps.apple.com/?daddr=${latitude},${longitude}`),
-            },
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-          ],
-          { cancelable: true }
-        );
-      } else {
-        Linking.openURL(url);
-      }
-    } else {
-      console.warn('User location not available.');
-    }
-  };
+  
 
 
   return (
@@ -92,7 +114,7 @@ export default function App({onlocationChange}) {
         // userInterfaceStyle='dark' //ios only
         // showsBuildings='true'
       />
-            <Button  onPress={handleNavigate} mode="contained" style={styles.btnav}>dsa</Button>
+            {/* <Button  onPress={handleNavigate} mode="contained" style={styles.btnav}>dsa</Button> */}
 
     </View>
   );

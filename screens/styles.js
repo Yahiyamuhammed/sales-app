@@ -1,15 +1,16 @@
 import { icon } from '@fortawesome/fontawesome-svg-core';
 import { StyleSheet } from 'react-native';
+// import { white } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',
-    marginLeft:20,
-    marginTop:50,
+    paddingLeft:20,
+    paddingTop:10,
     // marginTop:500,
-    // backgroundColor: '#1a1a1a', // Background color
+    backgroundColor: '#fff', // Background color
   },
   count: {
     padding: 4,
@@ -37,8 +38,10 @@ const styles = StyleSheet.create({
   {
     padding: 8,
     paddingRight: 0,
-    height: 40,
-    borderRadius: 4,
+    // height: 40,
+    // borderRadius: 4,
+     alignItems: 'center',
+     justifyContent: 'center' 
     // borderWidth: 1,
     // borderColor: '#ccc',
     // marginBottom: 15,
@@ -50,7 +53,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: '#ccc',
-    marginBottom: 15,
+    marginTop: 10,
   },
   inputitem: {
     marginLeft:10,
@@ -108,6 +111,7 @@ const styles = StyleSheet.create({
   homeContainer:{
 
     flex: 1,
+    backgroundColor:"#fff"
     
     // alignItems: 'center',
     // justifyContent: 'center',
@@ -185,7 +189,32 @@ const styles = StyleSheet.create({
   },
   test:{
     borderWidth:1
-  }
+  },
+  shopdheading:{
+    borderWidth:2,
+    borderColor:"#bae2da",
+    width:'110%',
+    padding:10,
+    borderRadius:6,
+  },
+  shopdheadingtext:{
+    width:100,
+    // borderWidth:1,
+    fontSize:16,
+    position: 'relative',
+
+    top: -20,
+    left: 0 ,
+    backgroundColor:"#fff",
+  },
+  selecteditems:{
+    backgroundColor: 'rgba(186, 226, 218, 0.3)',
+    marginBottom:3,
+    borderRadius:6,
+    // fontSize:10,
+    height:40,
+  },
+
 }); 
 
 export default styles;

@@ -28,7 +28,7 @@ return (
 </Stack.Navigator> */}
 
 <Tab.Navigator
-      initialRouteName="home"
+      initialRouteName="Add Sale"
         screenOptions={({ route }) => ({
 
           headerStyle: {
@@ -70,6 +70,8 @@ return (
             headerStyle: {
               backgroundColor: "#bae2da", // Change the background color of the header here
             },
+            contentStyle: { backgroundColor: "white" }, // Set background color of content area to white
+
             headerTintColor: "#fff", // Change the text color of the header here
           }} // Change the header title here
           />
