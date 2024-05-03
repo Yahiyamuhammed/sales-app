@@ -136,12 +136,12 @@ export default function App() {
   const handleSubmit = async () => {
     
     try {
-      await insertItem(shopName, Place, quantity, Items, selectedDate, pkts,balance,location);
+      await insertItem(shopName, Place, wheight, Items, selectedDate, pkts,balance,location);
       // console.log("db loc",location);
       // Reset input values after successful insertion
       setshopName('');
       setPlace('');
-      setQuantity('');
+      setWheight('');
       setItems([]);
       setSelectedDate(null);
       setpkts('');
@@ -201,7 +201,7 @@ export default function App() {
       latitude: userLocation.latitude,
       longitude: userLocation.longitude
     });
-        // console.log("location fn called",location);
+        console.log("location fn called",location);
   }
  
 
@@ -252,12 +252,12 @@ export default function App() {
         {selectedList && selectedList.map((item, index) => (
           
           <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', ...styles.selecteditems }}>
-  <Text style={{ flexBasis: 100, marginRight: 10, fontSize: 15 }}>{item[0]}</Text>
-  <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-    <Text style={{ flexBasis: 60, marginRight: 10, fontSize: 15 }}>{item[1]}(g)</Text>
-    <Text style={{ flexBasis: 80, marginRight: 10, fontSize: 15 }}>qty:{item[2]}</Text>
-  </View>
-</View>
+            <Text style={{ flexBasis: 100, marginLeft: 10, fontSize: 15 }}>{item[0]}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+              <Text style={{ flexBasis: 60, marginRight: 10, fontSize: 15 }}>{item[1]}(g)</Text>
+              <Text style={{ flexBasis: 80, marginRight: 10, fontSize: 15 }}>qty:{item[2]}</Text>
+            </View>
+          </View>
 
         ))}
         <TextInput
@@ -329,17 +329,22 @@ export default function App() {
 
 </View></View>
 
+
+<View style={{paddingTop:10,marginTop:10}}>
+      <View style={styles.shopdheading}>
+      {/* <Text style={{...styles.shopdheadingtext,width:150}}>Transaction Details</Text> */}
+      
             <View style={margin='0'}>
 
-      <DatePickerComponent onDateSelect={handleDateSelect} />
+      {/* <DatePickerComponent onDateSelect={handleDateSelect} /> */}
       <Location onlocationChange={getLocation}/>
       </View>
 
     </View>
     
-   
-    <View >
-    <Button title="Submit" mode="contained"onPress={handleSubmit} >Submit</Button>
+   </View></View>
+    <View style={{marginRight:'9%',marginLeft:'1%',marginBottom:20,}}>
+    <Button title="Submit" mode="contained"onPress={handleSubmit} style={{width:'%',}}>Submit</Button>
    </View>
   </ScrollView>
 

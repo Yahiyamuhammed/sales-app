@@ -1,4 +1,4 @@
-import React ,{useState} from 'react';
+import React ,{useState,useRef,useEffect} from 'react';
 import MapView,{PROVIDER_GOOGLE} from 'react-native-maps';
 import { StyleSheet, View ,Linking,Platform,Alert} from 'react-native';
 import { Button } from "react-native-paper";
@@ -66,6 +66,8 @@ export default function App({onlocationChange}) {
 
     const [userLocation, setUserLocation] = useState(1);
     const [userLocationAllData, setUserLocationAllData] = useState(1);
+    const [locationTimer, setLocationTimer] = useState(null);
+
 
     
 
@@ -78,11 +80,25 @@ export default function App({onlocationChange}) {
     setUserLocation({ latitude, longitude });
 
     // console.log("location updated",userLocation);
-    onlocationChange(userLocation);
-    // Here you can update any other variables based on the user's location
-  };
 
-  
+
+    // Clear the existing timer
+    if (locationTimer) {
+      clearTimeout(locationTimer);
+    }
+
+    // Set a new timer for 5 seconds
+    const newTimer = setTimeout(() => {
+      console.log("5 seconds");
+      setLocationTimer(null); 
+      onlocationChange(userLocation);
+    }, 1000);
+
+    // Store the new timer ID in state
+    setLocationTimer(newTimer);
+
+
+  };     
 
 
   return (
@@ -126,7 +142,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height:100,
     borderWidth:1,
-    marginBottom:50,
+    marginBottom:0,
+    borderRadius:3,
   },
   map: {
     width: '100%',
